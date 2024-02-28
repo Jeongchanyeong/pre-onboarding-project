@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import { useState } from 'react';
 /*
 Add와 Delete 기능 2 가지를 만듭니다.
 
@@ -12,18 +12,21 @@ input 창에 list1을 입력 후 Add 버튼을 누르면 input 창 하단에 lis
 전역상태를 관리해주세요.(가능한 Redux나 Redux-toolkit을 이용해주세요.) 
 */
 
+/* 
+1. 입력한 것들 감지
+1-1) 
+
+
+2. 입력한 것이 CreateButton을 눌렀을 때(onClick) create되어야 함
+3. 따로 생성되는 컴포넌트를 만들어서 분리해야겠다.
+4. 최상위 컴포넌트에서 onCreate함수를 제작하여 useState()로 상태를 관리하자
+5. ListPage에서는 상태관리함수를, Item에는 초깃값을 전달한다.
+
+*/
+
 const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 60vw;
-  height: 100vh;
-
-  background-color: #b6b6b6;
+  margin-top: 200px;
 `;
-
-const WrapperBox = styled.div``;
 
 const InputBox = styled.input`
   width: 300px;
@@ -40,13 +43,27 @@ const CreateButton = styled.button`
   cursor: pointer;
 `;
 
-const List = () => {
+interface ListProps {
+  onCreate: (content: string) => void;
+}
+
+const List: React.FC<ListProps> = ({ onCreate }) => {
+  const [state, setState] = useState('');
+
+  const handleChangeValue = (e: any) => {
+    setState(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    onCreate(state);
+
+    setState('');
+  };
+
   return (
     <Wrapper>
-      <WrapperBox>
-        <InputBox placeholder="뭐라적을래"></InputBox>
-        <CreateButton>Add</CreateButton>
-      </WrapperBox>
+      <InputBox value={state} onChange={handleChangeValue}></InputBox>
+      <CreateButton onClick={handleSubmit}>추가</CreateButton>
     </Wrapper>
   );
 };
